@@ -21,7 +21,7 @@ bosh -n create release \
   --version="$VERSION" \
   --with-tarball
 
-echo "$VERSION" > VERSION
+echo -n "$VERSION" > ../VERSION
 
 if [[ "true" != "$FINAL_RELEASE" ]] ; then
   exit
