@@ -5,9 +5,10 @@ set -u
 
 bosh -n target "${BOSH_TARGET}"
 bosh -n login "${BOSH_USERNAME}" "${BOSH_PASSWORD}"
+bosh -n download manifest "${BOSH_DEPLOYMENT_NAME}" > manifest.yml
 
 bosh \
   -n \
-  -d "${DEPLOYMENT_FILE}" \
+  -d manifest.yml \
   run errand \
   "${ERRAND_NAME}"
