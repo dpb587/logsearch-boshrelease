@@ -3,9 +3,19 @@
 set -e
 set -u
 
+function varsfrom {
+  [ -e ci/config/$1.yml ] && echo "--vars-from ci/config/$1.yml"
+  [ -e ci/config/$1-private.yml ] && echo "--vars-from ci/config/$1-private.yml"
+}
+
+YML=$( mktemp pipeline-XXXXXX )
+
+./ci/pipelines/dev/generate > $YML
+
 fly -t "${FLY_TARGET}" \
-  configure \
-  --config ci/pipelines/concourse.yml \
-  --vars-from ci/config/default.yml \
-  --vars-from ci/config/private.yml \
-  "${1:-logsearch-boshrelease}"
+  configure --config $YML \
+  $( varsfrom common ) \
+  $( varsfrom develop ) \
+  "${1:-logsearch}-develop"
+
+rm $YML

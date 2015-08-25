@@ -8,6 +8,7 @@
         "s3:PutObject"
       ],
       "Resource": [
+        "arn:aws:s3:::logsearch-boshrelease-concoursetest/*",
         "arn:aws:s3:::logsearch-boshrelease/*"
       ]
     },
@@ -17,6 +18,7 @@
         "s3:ListBucket"
       ],
       "Resource": [
+        "arn:aws:s3:::logsearch-boshrelease-concoursetest",
         "arn:aws:s3:::logsearch-boshrelease"
       ]
     }
