@@ -134,28 +134,6 @@ jobs:
       syslog_port: 5514
       elasticsearch_hostport: "10.244.2.2:9200"
 
-# upload your backfill data
-# $ sshpass -pc1oudc0w scp -i "$HOME/.ssh/vagrant" 2014102721.20141027220003-api-0.log.xz vcap@10.244.2.26:/tmp/backfill.xz
-# restart ingestion of it all
-# $ sshpass -pc1oudc0w ssh -i "$HOME/.ssh/vagrant" vcap@10.244.2.26 "echo c1oudc0w | sudo -p '' -S /var/vcap/jobs/ingestor_archiver/bin/reload /tmp/backfill.xz"
-# utility if you want to block until complete
-# $ sshpass -pc1oudc0w ssh -i "$HOME/.ssh/vagrant" vcap@10.244.2.26 "echo c1oudc0w | sudo -p '' -S /var/vcap/jobs/ingestor_archiver/bin/wait-until-loaded"
-#- name: restorer
-#  release: logsearch
-#  templates:
-#  - name: ingestor_archiver
-#  - name: parser
-#  instances: 1
-#  resource_pool: warden
-#  networks:
-#  - name: default
-#    default:
-#    - dns
-#    - gateway
-#  properties:
-#    redis:
-#      key: "logstash-restorer"
-
 properties:
   api:
     port: 80
@@ -176,10 +154,8 @@ properties:
   logstash_parser:
     debug: true
     filters: |
-             <% filtersconf = File.join(File.dirname(File.expand_path(__FILE__)), 'examples/filters.conf') %>
-             <%= File.read(filtersconf).gsub(/^/, '             ').strip if File.exists? filtersconf %>
              # src/sample-logs/repo-commits/logstash-filters.conf
-             <%= File.read("#{File.dirname(File.expand_path(__FILE__))}/src/sample-logs/repo-commits/logstash-filters.conf").gsub(/^/, '             ').strip %>
+             <%= File.read("#{File.dirname(File.expand_path("repo"))}/src/sample-logs/repo-commits/logstash-filters.conf").gsub(/^/, '             ').strip %>
   logstash_ingestor:
     debug: true
     relp:
