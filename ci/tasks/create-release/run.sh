@@ -15,3 +15,7 @@ bosh -n create release \
   $EXTRA_OPTS \
   --version="$( cat ../version/number )" \
   --with-tarball
+
+[[ "true" == "${FINAL_RELEASE:-}" ]] || exit
+
+
