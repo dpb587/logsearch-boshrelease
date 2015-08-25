@@ -3,6 +3,7 @@ platform: "linux"
 image: "docker:///concourse/concourse-ci"
 inputs:
   - name: "repo"
+  - name: "repo-pr"
   - name: "version"
 run:
   path: "repo/ci/tasks/create-release/run.sh"
