@@ -30,7 +30,7 @@ YML=$( mktemp pipeline-XXXXXX )
 
 ./ci/pipelines/dev/generate > $YML
 
-fly -t "${FLY_TARGET}" \
+echo "y" | fly -t "${FLY_TARGET}" \
   configure --config $YML \
   $( varsfrom common ) \
   $( varsfrom develop ) \
@@ -44,7 +44,7 @@ fly -t "${FLY_TARGET}" \
 
 ./ci/pipelines/release/generate > $YML
 
-fly -t "${FLY_TARGET}" \
+echo "y" | fly -t "${FLY_TARGET}" \
   configure --config $YML \
   $( varsfrom common ) \
   $( varsfrom develop ) \

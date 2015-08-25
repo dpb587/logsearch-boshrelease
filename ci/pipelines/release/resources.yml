@@ -1,9 +1,3 @@
-- name: "repo-release"
-  type: "git"
-  source:
-    uri: "{{repo-uri}}"
-    branch: "{{repo-release-branch}}"
-
 - name: "release-release"
   type: "s3"
   source:

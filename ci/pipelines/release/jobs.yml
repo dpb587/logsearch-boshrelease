@@ -32,23 +32,23 @@
           AWS_SECRET_KEY: "{{aws-secret-key}}"
     - put: "release-release"
       params:
-        from: "create-release/repo/repo/releases/logsearch/(.+).tgz"
+        from: "finalize-release/repo/releases/(.+).tgz"
         to: "{{artifact-release-prefix}}tarball/"
     - put: "release-release-src"
       params:
-        from: "create-release/repo/repo/releases-src/logsearch/(.+).tgz"
+        from: "finalize-release/repo/releases-src/logsearch/(.+).tgz"
         to: "{{artifact-release-prefix}}src/"
-    - put: "repo-release"
+    - put: "repo-dev"
       params:
-        repository: "create-release/repo/repo"
+        repository: "finalize-release/repo"
         rebase: true
-        tag: "create-release/repo/name"
+        tag: "finalize-release/name"
     - put: "github-release"
       params:
-        name: "create-release/repo/name"
-        tag: "create-release/repo/name"
-        body: "create-release/repo/notes.md"
-        commitish: "create-release/repo/commit"
+        name: "finalize-release/name"
+        tag: "finalize-release/name"
+        body: "finalize-release/notes.md"
+        commitish: "finalize-release/commit"
     - put: "version"
       params:
         file: "version/number"

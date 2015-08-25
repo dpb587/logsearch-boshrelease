@@ -1,8 +1,7 @@
-repo-uri: "https://github.com/dpb587/logsearch-boshrelease.git"
+repo-uri: "git@github.com:dpb587/logsearch-boshrelease.git"
+repo-key: ~
 
 artifact-bucket: "logsearch-boshrelease-concoursetest"
-
-git-private-key: ~
 
 github-user: "dpb587"
 github-repository: "logsearch-boshrelease"

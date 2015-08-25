@@ -37,7 +37,6 @@ git config user.name "${CI_NAME:-CI Bot}"
 git add -A .final_builds releases
 
 (
-  set -e
   echo "Release v$VERSION"
   echo ""
   cat releases/logsearch-$VERSION.md

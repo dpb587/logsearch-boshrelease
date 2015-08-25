@@ -3,6 +3,7 @@
   source:
     uri: "{{repo-uri}}"
     branch: "{{repo-dev-branch}}"
+    private-key: "{{repo-key}}"
 
 - name: "version-dev"
   type: "semver"
