@@ -1,46 +1,24 @@
-#
-# create a dev release for ourselves
-#
-
 - name: "create-release"
   public: true
   plan:
     - aggregate:
-        - get: "repo"
-        - get: "repo-pr"
+        - get: "repo-base"
+          resource: "repo-dev"
+        - get: "repo-head"
+          resource: "repo-pr"
           trigger: true
         - get: "version"
-          resource: "version-wip"
+          resource: "version-dev-wip"
           params:
             bump: "patch"
     - task: "repo"
       file: "repo/ci/tasks/merge-pr/task.yml"
     - task: "create-release"
       file: "repo/ci/tasks/create-release/task.yml"
-      config:
-        params:
-          MERGE_PATH: "repo-pr"
-    - put: "version-wip"
+    - put: "version-dev-wip"
       params:
         file: "version/number"
-    - put: "release"
+    - put: "release-pr"
       params:
         from: "repo/dev_releases/logsearch/logsearch-(.+).tgz"
-        to: "{{release-prefix}}tarball/"
-
-#
-# update the version reference if we're successful
-#
-
-- name: "update-version"
-  public: true
-  plan:
-    - aggregate:
-        - get: "version-wip"
-          trigger: true
-          passed:
-            - "e2e"
-            - "logsearch-shipper-filters"
-    - put: "version"
-      params:
-        file: "version-wip/number"
+        to: "{{release-dev-prefix}}tarball/"

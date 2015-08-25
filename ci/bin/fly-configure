@@ -23,6 +23,8 @@ fly -t "${FLY_TARGET}" \
   configure --config $YML \
   $( varsfrom common ) \
   $( varsfrom develop ) \
+  --var repo-resource=repo-dev \
+  --var release-resource=release-dev \
   "${1:-logsearch}-develop"
 
 #
@@ -36,8 +38,11 @@ if [ -f ci/config/pr.txt ] ; then
     echo "y" | fly -t "${FLY_TARGET}" \
       configure --config $YML \
       $( varsfrom common ) \
+      $( varsfrom develop ) \
       $( varsfrom pr ) \
       $( varsfrom pr/$PR_NUMBER ) \
+      --var repo-resource=repo-pr \
+      --var release-resource=release-pr \
       "${1:-logsearch}-pr${PR_NUMBER}"
   done < ci/config/pr.txt
 fi

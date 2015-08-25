@@ -31,6 +31,4 @@ cat > ../../config/pr/$1.yml << EOF
 repo-branch: "${PR_BASE_REF}"
 repo-pr-uri: "https://github.com/${PR_HEAD_OWNER}/${PR_HEAD_NAME}.git"
 repo-pr-branch: "${PR_HEAD_REF}"
-release-prefix: "pr/"
-bosh-lite-e2e-deployment: "develop-e2e"
 EOF

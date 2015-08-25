@@ -1,40 +1,33 @@
-#
-# create a dev release for ourselves
-#
-
 - name: "create-release"
   public: true
   plan:
     - aggregate:
         - get: "repo"
+          resource: "repo-dev"
           trigger: true
         - get: "version"
-          resource: "version-wip"
+          resource: "version-dev-wip"
           params:
             bump: "patch"
     - task: "create-release"
       file: "repo/ci/tasks/create-release/task.yml"
-    - put: "version-wip"
+    - put: "version-dev-wip"
       params:
         file: "version/number"
-    - put: "release"
+    - put: "release-dev"
       params:
         from: "repo/dev_releases/logsearch/logsearch-(.+).tgz"
-        to: "{{release-prefix}}tarball/"
-
-#
-# update the version reference if we're successful
-#
+        to: "{{release-dev-prefix}}tarball/"
 
 - name: "update-version"
   public: true
   plan:
     - aggregate:
-        - get: "version-wip"
+        - get: "version-dev-wip"
           trigger: true
           passed:
             - "e2e"
             - "logsearch-shipper-filters"
-    - put: "version"
+    - put: "version-dev"
       params:
-        file: "version-wip/number"
+        file: "version-dev-wip/number"

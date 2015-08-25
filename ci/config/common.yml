@@ -1,6 +1,10 @@
 repo-uri: "https://github.com/dpb587/logsearch-boshrelease.git"
 
 release-bucket: "logsearch-boshrelease-concoursetest"
+
+git-private-key: ~
+github-token: ~
+
 aws-access-key: ~
 aws-secret-key: ~
 

@@ -3,18 +3,18 @@
 set -e
 set -u
 
-cd "$PWD/repo"
+cd "$PWD/repo-base"
 
 git config user.email "${CI_EMAIL:-ci@localhost}"
 git config user.name "${CI_NAME:-CI Bot}"
 
-PR_COMMIT=$( cd ../repo-pr ; git rev-parse HEAD )
-git remote add --fetch pr file://$PWD/../repo-pr
+PR_COMMIT=$( cd ../repo-head ; git rev-parse HEAD )
+git remote add --fetch repo-head file://$PWD/../repo-head
 git merge $PR_COMMIT < /dev/null
 
 cd ..
 
 shopt -s dotglob nullglob
-mv repo/* ./
+mv repo-base/* ./
 
-rm -fr repo repo-pr
+rm -fr repo-base repo-head

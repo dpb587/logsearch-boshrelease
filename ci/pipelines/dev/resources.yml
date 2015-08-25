@@ -1,48 +1,32 @@
-- name: "repo"
+- name: "repo-dev"
   type: "git"
   source:
     uri: "{{repo-uri}}"
-    branch: "{{repo-branch}}"
+    branch: "{{repo-dev-branch}}"
 
-#
-# use this version to track fully successful builds
-#
-
-- name: "version"
+- name: "version-dev"
   type: "semver"
   source:
     bucket: "{{release-bucket}}"
-    key: "{{release-prefix}}version"
+    key: "{{release-dev-prefix}}version"
     access_key_id: "{{aws-access-key}}"
     secret_access_key: "{{aws-secret-key}}"
 
-#
-# use a separate version marker to track unique builds
-#
-
-- name: "version-wip"
+- name: "version-dev-wip"
   type: "semver"
   source:
     bucket: "{{release-bucket}}"
-    key: "{{release-prefix}}version-wip"
+    key: "{{release-dev-prefix}}version-wip"
     access_key_id: "{{aws-access-key}}"
     secret_access_key: "{{aws-secret-key}}"
 
-#
-# we'll publish our releases here
-#
-
-- name: "release"
+- name: "release-dev"
   type: "s3"
   source:
     bucket: "{{release-bucket}}"
-    regexp: "{{release-prefix}}tarball/logsearch-(.*).tgz"
+    regexp: "{{release-dev-prefix}}tarball/logsearch-(.*).tgz"
     access_key_id: "{{aws-access-key}}"
     secret_access_key: "{{aws-secret-key}}"
-
-#
-# use a deployment for our e2e test
-#
 
 - name: "e2e-deployment"
   type: "bosh-deployment"
@@ -50,12 +34,8 @@
     target: "{{bosh-lite-target}}"
     username: "{{bosh-lite-username}}"
     password: "{{bosh-lite-password}}"
-    deployment: "{{bosh-lite-e2e-deployment}}"
+    deployment: "develop-e2e"
     ignore_ssl: "yes"
-
-#
-# bosh.io stemcell for aws
-#
 
 - name: "bosh-warden-stemcell"
   type: "bosh-io-stemcell"

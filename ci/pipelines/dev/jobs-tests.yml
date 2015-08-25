@@ -1,21 +1,19 @@
-#
-# run some sanity tests against a dev release
-#
-
 - name: "e2e"
   public: true
   plan:
     - aggregate:
         - get: "repo"
+          resource: "{{repo-resource}}"
           trigger: true
           passed:
             - "create-release"
         - get: "version"
-          resource: "version-wip"
+          resource: "version-dev-wip"
           trigger: true
           passed:
             - "create-release"
         - get: "release"
+          resource: "{{release-resource}}"
           trigger: true
           passed:
             - "create-release"
@@ -38,20 +36,17 @@
           DEPLOYMENT_NAME: "develop-e2e"
           ERRAND_NAME: "test_e2e_errand"
 
-#
-# shipper rules need to be built and tested
-#
-
 - name: "logsearch-shipper-filters"
   public: true
   plan:
     - aggregate:
         - get: "repo"
+          resource: "repo-dev"
           trigger: true
           passed:
             - "create-release"
         - get: "version"
-          resource: "version-wip"
+          resource: "version-dev-wip"
           trigger: true
           passed:
             - "create-release"
