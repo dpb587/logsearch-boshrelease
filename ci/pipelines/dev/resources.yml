@@ -28,6 +28,14 @@
     access_key_id: "{{aws-access-key}}"
     secret_access_key: "{{aws-secret-key}}"
 
+- name: "release-dev-src"
+  type: "s3"
+  source:
+    bucket: "{{artifact-bucket}}"
+    regexp: "{{artifact-dev-prefix}}src/logsearch-src-(.*).tgz"
+    access_key_id: "{{aws-access-key}}"
+    secret_access_key: "{{aws-secret-key}}"
+
 - name: "e2e-deployment"
   type: "bosh-deployment"
   source:

@@ -16,8 +16,12 @@
         file: "version/number"
     - put: "release-dev"
       params:
-        from: "repo/dev_releases/logsearch/logsearch-(.+).tgz"
+        from: "repo/dev_releases/logsearch-(.+).tgz"
         to: "{{artifact-dev-prefix}}tarball/"
+    - put: "release-dev-src"
+      params:
+        from: "repo/dev_releases-src/logsearch-src-(.+).tgz"
+        to: "{{artifact-dev-prefix}}src/"
 
 - name: "update-version"
   public: true

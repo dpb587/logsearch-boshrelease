@@ -12,7 +12,7 @@
           params:
             bump: "patch"
     - task: "repo"
-      file: "repo/ci/tasks/merge-pr/task.yml"
+      file: "repo-base/ci/tasks/merge-pr/task.yml"
     - task: "create-release"
       file: "repo/ci/tasks/create-release/task.yml"
     - put: "version-dev-wip"
@@ -20,5 +20,9 @@
         file: "version/number"
     - put: "release-pr"
       params:
-        from: "repo/dev_releases/logsearch/logsearch-(.+).tgz"
+        from: "repo/dev_releases/logsearch-(.+).tgz"
         to: "{{artifact-dev-prefix}}tarball/"
+    - put: "release-pr-src"
+      params:
+        from: "repo/dev_releases-src/logsearch-src-(.+).tgz"
+        to: "{{artifact-dev-prefix}}src/"

@@ -20,8 +20,12 @@
           FINAL_RELEASE: "true"
     - put: "release-release"
       params:
-        from: "create-release/repo/repo/releases/logsearch/logsearch-(.+).tgz"
+        from: "create-release/repo/repo/releases/logsearch-(.+).tgz"
         to: "{{artifact-release-prefix}}tarball/"
+    - put: "release-release-src"
+      params:
+        from: "create-release/repo/repo/releases-src/logsearch-src-(.+).tgz"
+        to: "{{artifact-release-prefix}}src/"
     - put: "repo-release"
       params:
         repository: "create-release/repo/repo"

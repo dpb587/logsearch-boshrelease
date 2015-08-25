@@ -12,6 +12,14 @@
     access_key_id: "{{aws-access-key}}"
     secret_access_key: "{{aws-secret-key}}"
 
+- name: "release-release-src"
+  type: "s3"
+  source:
+    bucket: "{{artifact-bucket}}"
+    regexp: "{{artifact-release-prefix}}src/logsearch-src-(.*).tgz"
+    access_key_id: "{{aws-access-key}}"
+    secret_access_key: "{{aws-secret-key}}"
+
 - name: "github-release"
   type: "github-release"
   source:
