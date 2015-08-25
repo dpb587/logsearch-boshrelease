@@ -12,7 +12,7 @@ PR_COMMIT=$( cd ../repo-pr ; git rev-parse HEAD )
 git remote add --fetch pr file://$PWD/../repo-pr
 git merge $PR_COMMIT < /dev/null
 
-mv
-mv * .* ../
+mv * ../
+mv .* ../
 
 rm -fr repo repo-pr
