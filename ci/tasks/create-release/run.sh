@@ -11,17 +11,12 @@ VERSION=$( cat ../version/number )
 
 if [[ "true" == "$FINAL_RELEASE" ]] ; then
   EXTRA_OPTS="$EXTRA_OPTS --final"
-else
-  VERSION_BUILD=$( git rev-parse HEAD | cut -c -10 )
-  VERSION="$VERSION+rev.$VERSION_BUILD"
 fi
   
 bosh -n create release \
   $EXTRA_OPTS \
   --version="$VERSION" \
   --with-tarball
-
-echo -n "$VERSION" > ../VERSION
 
 if [[ "true" != "$FINAL_RELEASE" ]] ; then
   exit
