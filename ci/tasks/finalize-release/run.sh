@@ -27,10 +27,6 @@ bosh -n finalize release \
   ../release/tarball.tgz \
   --version="$VERSION"
 
-bosh -n create release \
-  releases/logsearch/logsearch-$VERSION.yml \
-  --with-tarball
-
 #
 # commit final release
 #
