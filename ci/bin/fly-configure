@@ -3,12 +3,19 @@
 set -e
 set -u
 
+export PR_REPO_OWNER="${PR_REPO_OWNER:-logsearch}"
+export PR_REPO_NAME="${PR_REPO_NAME:-logsearch-boshrelease}"
+
 function varsfrom {
   [ -e ci/config/$1.yml ] && echo "--vars-from ci/config/$1.yml"
   [ -e ci/config/$1-private.yml ] && echo "--vars-from ci/config/$1-private.yml"
 }
 
 YML=$( mktemp pipeline-XXXXXX )
+
+#
+# develop branch
+#
 
 ./ci/pipelines/dev/generate > $YML
 
@@ -17,5 +24,26 @@ fly -t "${FLY_TARGET}" \
   $( varsfrom common ) \
   $( varsfrom develop ) \
   "${1:-logsearch}-develop"
+
+#
+# dynamic prs
+#
+
+if [ -f ci/config/pr.txt ] ; then
+  while read -r PR_NUMBER ; do
+    ./ci/pipelines/pr/generate $PR_NUMBER > $YML
+    
+    echo "y" | fly -t "${FLY_TARGET}" \
+      configure --config $YML \
+      $( varsfrom common ) \
+      $( varsfrom pr ) \
+      $( varsfrom pr/$PR_NUMBER ) \
+      "${1:-logsearch}-pr${PR_NUMBER}"
+  done < ci/config/pr.txt
+fi
+
+#
+# cleanup
+#
 
 rm $YML

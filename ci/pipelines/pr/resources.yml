@@ -1,0 +1,5 @@
+- name: "repo-pr"
+  type: "git"
+  source:
+    uri: "{{repo-pr-uri}}"
+    branch: "{{repo-pr-branch}}"

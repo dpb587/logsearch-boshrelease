@@ -1,0 +1,59 @@
+#
+# run some sanity tests against a dev release
+#
+
+- name: "e2e"
+  public: true
+  plan:
+    - aggregate:
+        - get: "repo"
+          trigger: true
+          passed:
+            - "create-release"
+        - get: "version"
+          resource: "version-wip"
+          trigger: true
+          passed:
+            - "create-release"
+        - get: "release"
+          trigger: true
+          passed:
+            - "create-release"
+    - get: "bosh-warden-stemcell"
+      trigger: true
+    - put: "e2e-deployment"
+      params:
+        manifest: "repo/ci/jobs/dev-e2e/deployment.yml"
+        stemcells:
+          - "bosh-warden-stemcell/*.tgz"
+        releases:
+          - "release/*.tgz"
+    - task: "test"
+      file: "repo/ci/tasks/run-deployment-errand/task.yml"
+      config:
+        params:
+          BOSH_TARGET: "{{bosh-lite-target}}"
+          BOSH_USERNAME: "{{bosh-lite-username}}"
+          BOSH_PASSWORD: "{{bosh-lite-password}}"
+          DEPLOYMENT_NAME: "develop-e2e"
+          ERRAND_NAME: "test_e2e_errand"
+
+#
+# shipper rules need to be built and tested
+#
+
+- name: "logsearch-shipper-filters"
+  public: true
+  plan:
+    - aggregate:
+        - get: "repo"
+          trigger: true
+          passed:
+            - "create-release"
+        - get: "version"
+          resource: "version-wip"
+          trigger: true
+          passed:
+            - "create-release"
+    - task: "test"
+      file: "repo/ci/tasks/logsearch-shipper-test/task.yml"

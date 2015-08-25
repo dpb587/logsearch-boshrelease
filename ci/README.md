@@ -16,6 +16,10 @@ When first settings things up, you may need to create artifacts...
     echo -n "0.2.0" > version
     aws s3api put-object --bucket=logsearch-boshrelease-concoursetest --key=develop/version --body=version
     aws s3api put-object --bucket=logsearch-boshrelease-concoursetest --key=develop/version-wip --body=version
+    
+    echo -n "0.1.0" > version
+    aws s3api put-object --bucket=logsearch-boshrelease-concoursetest --key=pr/version --body=version
+    aws s3api put-object --bucket=logsearch-boshrelease-concoursetest --key=pr/version-wip --body=version
 
 Here are the short-term goals...
 

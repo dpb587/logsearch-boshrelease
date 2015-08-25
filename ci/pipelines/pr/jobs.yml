@@ -7,6 +7,7 @@
   plan:
     - aggregate:
         - get: "repo"
+        - get: "repo-pr"
           trigger: true
         - get: "version"
           resource: "version-wip"
@@ -14,6 +15,9 @@
             bump: "patch"
     - task: "create-release"
       file: "repo/ci/tasks/create-release/task.yml"
+      config:
+        params:
+          MERGE_PATH: "repo-pr"
     - put: "version-wip"
       params:
         file: "version/number"
