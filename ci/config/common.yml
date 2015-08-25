@@ -1,4 +1,4 @@
-repo-uri: "https://github.com/dpb587/logsearch-boshrelease.git"
+repo-uri: "git@github.com:dpb587/logsearch-boshrelease.git"
 
 release-bucket: "logsearch-boshrelease-concoursetest"
 aws-access-key: ~
