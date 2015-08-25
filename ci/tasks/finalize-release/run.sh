@@ -11,7 +11,7 @@ cd repo
 # we'll be updating the blobstore
 #
 
-cat > config/private.yml << EOF
+cat << EOF > config/private.yml
 ---
 blobstore:
   s3:

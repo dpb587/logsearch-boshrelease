@@ -1,11 +1,11 @@
 - name: "major"
   public: true
   plan:
+    - get: "version-dev"
     - aggregate:
         - get: "version"
           params:
             bump: "major"
-        - get: "version-dev"
         - get: "repo"
           resource: "repo-dev"
         - task: "src"
