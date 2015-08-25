@@ -2,6 +2,8 @@
 platform: "linux"
 image: "docker:///concourse/concourse-ci"
 inputs:
+  - name: "repo"
+  - name: "release"
   - name: "version"
 run:
-  path: "repo/ci/tasks/fetch-release-src/run.sh"
+  path: "repo/ci/tasks/finalize-release/run.sh"

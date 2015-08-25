@@ -18,11 +18,12 @@
     - put: "version-dev-wip"
       params:
         file: "version/number"
-    - put: "release-pr"
-      params:
-        from: "repo/dev_releases/logsearch/(.+).tgz"
-        to: "{{artifact-dev-prefix}}tarball/"
-    - put: "release-pr-src"
-      params:
-        from: "repo/dev_releases-src/logsearch/(.+).tgz"
-        to: "{{artifact-dev-prefix}}src/"
+    - aggregate:
+        - put: "release-dev"
+          params:
+            from: "create-release/repo/dev_releases/logsearch/(.+).tgz"
+            to: "{{artifact-dev-prefix}}tarball/"
+        - put: "release-dev-src"
+          params:
+            from: "create-release/repo/dev_releases-src/logsearch/(.+).tgz"
+            to: "{{artifact-dev-prefix}}src/"

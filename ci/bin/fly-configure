@@ -41,38 +41,38 @@ fly -t "${FLY_TARGET}" \
 #
 # release
 #
+
+./ci/pipelines/release/generate > $YML
+
+fly -t "${FLY_TARGET}" \
+  configure --config $YML \
+  $( varsfrom common ) \
+  $( varsfrom develop ) \
+  $( varsfrom release ) \
+  "${1:-logsearch}-release"
+
 #
-# ./ci/pipelines/release/generate > $YML
+# dynamic prs
 #
-# fly -t "${FLY_TARGET}" \
-#   configure --config $YML \
-#   $( varsfrom common ) \
-#   $( varsfrom develop ) \
-#   $( varsfrom release ) \
-#   "${1:-logsearch}-release"
+
+if [ -f ci/config/pr.txt ] ; then
+  while read -r PR_NUMBER ; do
+    ./ci/pipelines/pr/generate $PR_NUMBER > $YML
+
+    echo "y" | fly -t "${FLY_TARGET}" \
+      configure --config $YML \
+      $( varsfrom common ) \
+      $( varsfrom develop ) \
+      $( varsfrom pr ) \
+      $( varsfrom pr/$PR_NUMBER ) \
+      --var repo-resource=repo-pr \
+      --var release-resource=release-pr \
+      "${1:-logsearch}-pr${PR_NUMBER}"
+  done < ci/config/pr.txt
+fi
+
 #
-# #
-# # dynamic prs
-# #
+# cleanup
 #
-# if [ -f ci/config/pr.txt ] ; then
-#   while read -r PR_NUMBER ; do
-#     ./ci/pipelines/pr/generate $PR_NUMBER > $YML
-#
-#     echo "y" | fly -t "${FLY_TARGET}" \
-#       configure --config $YML \
-#       $( varsfrom common ) \
-#       $( varsfrom develop ) \
-#       $( varsfrom pr ) \
-#       $( varsfrom pr/$PR_NUMBER ) \
-#       --var repo-resource=repo-pr \
-#       --var release-resource=release-pr \
-#       "${1:-logsearch}-pr${PR_NUMBER}"
-#   done < ci/config/pr.txt
-# fi
-#
-# #
-# # cleanup
-# #
 
 rm $YML

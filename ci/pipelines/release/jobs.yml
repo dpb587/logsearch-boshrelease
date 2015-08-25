@@ -5,19 +5,27 @@
         - get: "version"
           params:
             bump: "major"
+        - get: "version-dev"
         - get: "repo"
           resource: "repo-dev"
-    - task: "repo"
-      file: "repo/ci/tasks/fetch-release/task.yml"
-      config:
-        params:
-          RELEASE_TGZ: "https://{{artifact-bucket}}.s3.amazonaws.com/{{artifact-dev-prefix}}tarball/logsearch-{version}.tgz"
-    - task: "create-release"
-      file: "repo/ci/tasks/create-release/task.yml"
-      config:
-        params:
-          RELEASE_DIR: "repo/repo"
-          FINAL_RELEASE: "true"
+        - task: "src"
+          config:
+            platform: linux
+            image: docker:///konne/ubuntu-wget
+            inputs: [ { name: "version-dev" } ]
+            run:
+              path: "/bin/bash"
+              args: [ "-c", "wget -O- https://{{artifact-bucket}}.s3.amazonaws.com/{{artifact-dev-prefix}}src/logsearch-src-$( cat version-dev/number ).tgz | tar -xzf- --strip-components=1" ]
+        - task: "release"
+          config:
+            platform: linux
+            image: docker:///konne/ubuntu-wget
+            inputs: [ { name: "version-dev" } ]
+            run:
+              path: "/bin/bash"
+              args: [ "-c", "wget -O tarball.tgz https://{{artifact-bucket}}.s3.amazonaws.com/{{artifact-dev-prefix}}tarball/logsearch-$( cat version-dev/number ).tgz" ]
+    - task: "finalize-release"
+      file: "src/ci/tasks/finalize-release/task.yml"
     - put: "release-release"
       params:
         from: "create-release/repo/repo/releases/logsearch/(.+).tgz"
