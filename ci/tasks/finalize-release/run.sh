@@ -8,6 +8,18 @@ VERSION=$( cat version/number )
 cd repo
 
 #
+# we'll be updating the blobstore
+#
+
+cat > config/private.yml << EOF
+---
+blobstore:
+  s3:
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+EOF
+
+#
 # finalize the release
 #
 

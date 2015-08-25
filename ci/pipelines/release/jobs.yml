@@ -26,6 +26,10 @@
               args: [ "-c", "wget -O tarball.tgz https://{{artifact-bucket}}.s3.amazonaws.com/{{artifact-dev-prefix}}tarball/logsearch-$( cat version-dev/number ).tgz" ]
     - task: "finalize-release"
       file: "src/ci/tasks/finalize-release/task.yml"
+      config:
+        params:
+          AWS_ACCESS_KEY: "{{ aws-access-key }}"
+          AWS_SECRET_KEY: "{{ aws-secret-key }}"
     - put: "release-release"
       params:
         from: "create-release/repo/repo/releases/logsearch/(.+).tgz"
