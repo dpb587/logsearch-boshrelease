@@ -59,7 +59,7 @@
           BOSH_TARGET: "{{bosh-lite-target}}"
           BOSH_USERNAME: "{{bosh-lite-username}}"
           BOSH_PASSWORD: "{{bosh-lite-password}}"
-          BOSH_DEPLOYMENT_NAME: "{{bosh-lite-e2e-deployment}}"
+          BOSH_DEPLOYMENT_NAME: "e2e-deployment"
           BOSH_DEPLOYMENT_FILE: "repo/ci/jobs/dev-e2e/deployment.yml"
           BOSH_ERRAND: "e2e-errand"
 

@@ -1,5 +1,5 @@
 ---
-name: <%= ENV['BOSH_DEPLOYMENT_NAME'] %>
+name: develop-e2e
 
 releases:
 - name: logsearch
