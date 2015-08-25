@@ -10,26 +10,30 @@ FINAL_RELEASE="${FINAL_RELEASE:-false}"
 VERSION=$( cat ../version/number )
 
 if [[ "true" == "$FINAL_RELEASE" ]] ; then
-  EXTRA_OPTS="${EXTRA_OPTS} --final"
+  EXTRA_OPTS="$EXTRA_OPTS --final"
 else
   VERSION_BUILD=$( git rev-parse HEAD | cut -c -10 )
-  VERSION="${VERSION}+rev.${VERSION_BUILD}"
+  VERSION="$VERSION+rev.$VERSION_BUILD"
 fi
   
 bosh -n create release \
   $EXTRA_OPTS \
-  --version="$( cat ../version/number )" \
+  --version="$VERSION" \
   --with-tarball
 
-echo "${VERSION}" > VERSION
+echo "$VERSION" > VERSION
 
-if [[ "true" == "$FINAL_RELEASE" ]] ; then
+if [[ "true" != "$FINAL_RELEASE" ]] ; then
   exit
 fi
 
 git add -A .final_builds releases
 
+git config user.email "${CI_EMAIL:-ci@localhost}"
+git config user.name "${CI_NAME:-CI Bot}"
+
 (
+  set -e
   echo "Release v$VERSION"
   echo ""
   cat releases/logsearch-$VERSION.md
