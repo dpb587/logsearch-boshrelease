@@ -4,7 +4,7 @@ set -e
 set -u
 
 bosh -n target "${BOSH_TARGET}"
-bosh -n login "${BOSH_USER}" "${BOSH_PASSWORD}"
+bosh -n login "${BOSH_USERNAME}" "${BOSH_PASSWORD}"
 
 bosh \
   -n \
