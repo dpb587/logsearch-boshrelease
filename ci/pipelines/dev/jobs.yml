@@ -12,11 +12,11 @@
           resource: "version-wip"
           params:
             bump: "patch"
-    - task: "create-release"
-      file: "repo/ci/tasks/create-release/task.yml"
     - put: "version-wip"
       params:
         file: "version/number"
+    - task: "create-release"
+      file: "repo/ci/tasks/create-release/task.yml"
     - put: "release"
       params:
         from: "repo/dev_releases/logsearch/logsearch-(.+).tgz"
@@ -89,12 +89,12 @@
 - name: "update-version"
   public: true
   plan:
-    - get: "version"
-      resource: "version-wip"
-      trigger: true
-      passed:
-        - "e2e"
-        - "logsearch-shipper-filters"
+    - aggregate:
+        - get: "create-release"
+          trigger: true
+          passed:
+            - "e2e"
+            - "logsearch-shipper-filters"
     - put: "version"
       params:
-        file: "version/number"
+        file: "create-release/VERSION"
