@@ -1,0 +1,63 @@
+- name: "repo"
+  type: "git"
+  source:
+    uri: "{{repo-uri}}"
+    branch: "{{repo-branch}}"
+
+#
+# use this version to track fully successful builds
+#
+
+- name: "version"
+  type: "semver"
+  source:
+    bucket: "{{release-bucket}}"
+    key: "{{release-prefix}}version"
+    access_key_id: "{{aws-access-key}}"
+    secret_access_key: "{{aws-secret-key}}"
+
+#
+# use a separate version marker to track unique builds
+#
+
+- name: "version-wip"
+  type: "semver"
+  source:
+    bucket: "{{release-bucket}}"
+    key: "{{release-prefix}}version-wip"
+    access_key_id: "{{aws-access-key}}"
+    secret_access_key: "{{aws-secret-key}}"
+
+#
+# we'll publish our releases here
+#
+
+- name: "release"
+  type: "s3"
+  source:
+    bucket: "{{release-bucket}}"
+    regexp: "{{release-prefix}}tarball/logsearch-(.*).tgz"
+    access_key_id: "{{aws-access-key}}"
+    secret_access_key: "{{aws-secret-key}}"
+
+#
+# use a deployment for our e2e test
+#
+
+- name: "e2e-deployment"
+  type: "bosh-deployment"
+  source:
+    target: "{{bosh-lite-target}}"
+    username: "{{bosh-lite-username}}"
+    password: "{{bosh-lite-password}}"
+    deployment: "{{bosh-lite-e2e-deployment}}"
+    ignore_ssl: "yes"
+
+#
+# bosh.io stemcell for aws
+#
+
+- name: "bosh-warden-stemcell"
+  type: "bosh-io-stemcell"
+  source:
+    name: "bosh-warden-boshlite-ubuntu-trusty-go_agent"

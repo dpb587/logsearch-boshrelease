@@ -1,0 +1,4 @@
+# dev.yml
+repo-branch: "develop"
+release-prefix: "develop/"
+bosh-lite-e2e-deployment: "develop-e2e"

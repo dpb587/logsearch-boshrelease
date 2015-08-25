@@ -1,0 +1,100 @@
+#
+# create a dev release for ourselves
+#
+
+- name: "create-release"
+  public: true
+  plan:
+    - aggregate:
+        - get: "repo"
+          trigger: true
+        - get: "version"
+          resource: "version-wip"
+          params:
+            bump: "patch"
+    - task: "create-release"
+      file: "repo/ci/tasks/create-release/task.yml"
+    - put: "version-wip"
+      params:
+        file: "version/number"
+    - put: "release"
+      params:
+        from: "repo/dev_releases/logsearch/logsearch-(.+).tgz"
+        to: "{{release-prefix}}tarball/"
+
+#
+# run some sanity tests against a dev release
+#
+
+- name: "e2e"
+  public: true
+  plan:
+    - aggregate:
+        - get: "repo"
+          trigger: true
+          passed:
+            - "create-release"
+        - get: "version"
+          resource: "version-wip"
+          trigger: true
+          passed:
+            - "create-release"
+        - get: "release"
+          trigger: true
+          passed:
+            - "create-release"
+    - get: "bosh-warden-stemcell"
+      trigger: true
+    - put: "e2e-deployment"
+      params:
+        manifest: "repo/ci/jobs/dev-e2e/deployment.yml"
+        stemcells:
+          - "bosh-warden-stemcell/*.tgz"
+        releases:
+          - "release/*.tgz"
+    - task: "test"
+      file: "repo/ci/tasks/run-deployment-errand/task.yml"
+      config:
+        params:
+          BOSH_TARGET: "{{bosh-lite-target}}"
+          BOSH_USERNAME: "{{bosh-lite-username}}"
+          BOSH_PASSWORD: "{{bosh-lite-password}}"
+          BOSH_DEPLOYMENT: "{{bosh-lite-e2e-deployment}}"
+          BOSH_ERRAND: "e2e-errand"
+
+#
+# shipper rules need to be built and tested
+#
+
+- name: "logsearch-shipper-filters"
+  public: true
+  plan:
+    - aggregate:
+        - get: "repo"
+          trigger: true
+          passed:
+            - "create-release"
+        - get: "version"
+          resource: "version-wip"
+          trigger: true
+          passed:
+            - "create-release"
+    - task: "test"
+      file: "repo/ci/tasks/logsearch-shipper-test/task.yml"
+
+#
+# update the version reference if we're successful
+#
+
+- name: "update-version"
+  public: true
+  plan:
+    - get: "version"
+      resource: "version-wip"
+      trigger: true
+      passed:
+        - "e2e"
+        - "logsearch-shipper-filters"
+    - put: "version"
+      params:
+        file: "version/number"

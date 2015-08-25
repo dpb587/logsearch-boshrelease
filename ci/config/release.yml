@@ -1,0 +1,6 @@
+# release.yml
+repo-branch: "develop"
+repo-release-branch: "release"
+github-release-token: "zzz"
+github-release-user: dpb587
+github-release-repository: logsearch-boshrelease

@@ -1,0 +1,8 @@
+repo-uri: "https://github.com/dpb587/logsearch-boshrelease.git"
+
+release-bucket: "logsearch-boshrelease-concoursetest"
+aws-access-key: ~
+aws-secret-key: ~
+
+bosh-lite-username: "admin"
+bosh-lite-password: "admin"

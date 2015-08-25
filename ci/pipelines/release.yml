@@ -1,0 +1,44 @@
+resources:
+  - name: "repo"
+    type: "git"
+    source:
+      uri: {{repo-uri}}
+      branch: {{repo-branch}}
+
+  - name: "repo-release"
+    type: "git"
+    source:
+      uri: {{repo-uri}}
+      branch: {{repo-release-branch}}
+
+  - name: "github-release"
+    type: "github-release"
+    source:
+      access_token: {{github-release-token}}
+      user: {{github-release-user}}
+      repository: {{github-release-repository}}
+
+  - name: "version"
+    type: semver
+    source:
+      bucket: {{release-bucket}}
+      key: "release/version"
+      access_key_id: {{release-access-key}}
+      secret_access_key: {{release-secret-key}}
+
+jobs:
+  - name: "major"
+    public: true
+    plan:
+      - get: "version"
+        params:
+          bump: "major"
+      - put: "version"
+        params:
+          file: "version/number"
+      - put: "github-release"
+        params:
+          name: "release-metadata/name"
+          tag: "release-metadata/name"
+          body: "release-metadata/notes.md"
+          commitish: generate-commitish/commitish
