@@ -1,4 +1,6 @@
 ---
+name: <%= ENV['BOSH_DEPLOYMENT_NAME'] %>
+
 releases:
 - name: logsearch
   version: latest
