@@ -1,27 +1,27 @@
 - name: "create-release"
   public: true
   plan:
-    - aggregate:
-        - get: "repo"
-          resource: "repo-dev"
-          trigger: true
-        - get: "version"
-          resource: "version-dev-wip"
-          params:
-            bump: "patch"
-    - task: "create-release"
-      file: "repo/ci/tasks/create-release/task.yml"
+    - get: "repo"
+      resource: "repo-dev"
+      trigger: true
+    - get: "version"
+      resource: "version-dev-wip"
+      params:
+        bump: "patch"
     - put: "version-dev-wip"
       params:
         file: "version/number"
-    - put: "release-dev"
-      params:
-        from: "repo/dev_releases/logsearch-(.+).tgz"
-        to: "{{artifact-dev-prefix}}tarball/"
-    - put: "release-dev-src"
-      params:
-        from: "repo/dev_releases-src/logsearch-src-(.+).tgz"
-        to: "{{artifact-dev-prefix}}src/"
+    - task: "create-release"
+      file: "repo/ci/tasks/create-release/task.yml"
+    - aggregate:
+        - put: "release-dev"
+          params:
+            from: "create-release/repo/dev_releases/logsearch/(.+).tgz"
+            to: "{{artifact-dev-prefix}}tarball/"
+        - put: "release-dev-src"
+          params:
+            from: "create-release/repo/dev_releases-src/logsearch/(.+).tgz"
+            to: "{{artifact-dev-prefix}}src/"
 
 - name: "update-version"
   public: true

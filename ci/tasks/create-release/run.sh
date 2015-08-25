@@ -55,7 +55,7 @@ fi
 # dump the source code
 #
 
-mkdir $RELEASE_SRC_DIR
+mkdir $RELEASE_SRC_DIR/logsearch
 
 COMMIT=$( git rev-parse HEAD )
 COMMIT_SHORT=$( echo $COMMIT | cut -c -10 )
@@ -64,4 +64,4 @@ git archive \
   --format=tar.gz \
   --prefix=logsearch-$COMMIT_SHORT/ \
   $COMMIT \
-  > $RELEASE_SRC_DIR/logsearch-src-$VERSION.tgz
+  > $RELEASE_SRC_DIR/logsearch/logsearch-src-$VERSION.tgz

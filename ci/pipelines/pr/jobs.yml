@@ -20,9 +20,9 @@
         file: "version/number"
     - put: "release-pr"
       params:
-        from: "repo/dev_releases/logsearch-(.+).tgz"
+        from: "repo/dev_releases/logsearch/(.+).tgz"
         to: "{{artifact-dev-prefix}}tarball/"
     - put: "release-pr-src"
       params:
-        from: "repo/dev_releases-src/logsearch-src-(.+).tgz"
+        from: "repo/dev_releases-src/logsearch/(.+).tgz"
         to: "{{artifact-dev-prefix}}src/"
