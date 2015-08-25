@@ -155,7 +155,7 @@ properties:
     debug: true
     filters: |
              # src/sample-logs/repo-commits/logstash-filters.conf
-             <%= File.read("#{File.expand_path("./repo")}/src/sample-logs/repo-commits/logstash-filters.conf").gsub(/^/, '             ').strip %>
+             <%= File.read("#{ENV['PWD']}/repo/src/sample-logs/repo-commits/logstash-filters.conf").gsub(/^/, '             ').strip %>
   logstash_ingestor:
     debug: true
     relp:
