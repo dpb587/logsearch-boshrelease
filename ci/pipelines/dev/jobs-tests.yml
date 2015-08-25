@@ -1,33 +1,31 @@
 - name: "e2e"
   public: true
   plan:
-    - aggregate:
-        - get: "repo"
-          resource: "{{repo-resource}}"
-          trigger: true
-          passed:
-            - "create-release"
-        - get: "version"
-          resource: "version-dev-wip"
-          trigger: true
-          passed:
-            - "create-release"
-        - get: "release"
-          resource: "{{release-resource}}"
-          trigger: true
-          passed:
-            - "create-release"
+    - get: "version"
+      resource: "version-dev-wip"
+      trigger: true
+      passed:
+        - "create-release"
+    - task: "src"
+      config:
+        platform: linux
+        image: docker:///concourse/concourse-ci
+        run:
+          path: "sh"
+          args: [ "-c", "wget -O- https://{{artifact-bucket}}.s3.amazonaws.com/{{artifact-dev-prefix}}tarball/logsearch-$( cat version/number ).tgz | tar -xzf- --strip-components=1" ]
+    - task: "release"
+      file: "src/ci/jobs/create-release-tarball/task.yml"
     - get: "bosh-warden-stemcell"
       trigger: true
     - put: "e2e-deployment"
       params:
-        manifest: "repo/ci/jobs/dev-e2e/deployment.yml"
+        manifest: "src/ci/jobs/dev-e2e/deployment.yml"
         stemcells:
           - "bosh-warden-stemcell/*.tgz"
         releases:
           - "release/*.tgz"
     - task: "test"
-      file: "repo/ci/tasks/run-deployment-errand/task.yml"
+      file: "src/ci/tasks/run-deployment-errand/task.yml"
       config:
         params:
           BOSH_TARGET: "{{bosh-lite-target}}"
@@ -39,16 +37,17 @@
 - name: "logsearch-shipper-filters"
   public: true
   plan:
-    - aggregate:
-        - get: "repo"
-          resource: "repo-dev"
-          trigger: true
-          passed:
-            - "create-release"
-        - get: "version"
-          resource: "version-dev-wip"
-          trigger: true
-          passed:
-            - "create-release"
+    - get: "version"
+      resource: "version-dev-wip"
+      trigger: true
+      passed:
+        - "create-release"
+    - task: "src"
+      config:
+        platform: linux
+        image: docker:///concourse/concourse-ci
+        run:
+          path: "sh"
+          args: [ "-c", "wget -O- https://{{artifact-bucket}}.s3.amazonaws.com/{{artifact-dev-prefix}}tarball/logsearch-$( cat version/number ).tgz | tar -xzf- --strip-components=1" ]
     - task: "test"
-      file: "repo/ci/tasks/logsearch-shipper-test/task.yml"
+      file: "src/ci/tasks/logsearch-shipper-test/task.yml"

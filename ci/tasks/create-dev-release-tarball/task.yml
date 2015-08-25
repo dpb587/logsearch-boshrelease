@@ -5,4 +5,4 @@ inputs:
   - name: "src"
   - name: "version"
 run:
-  path: "repo/ci/tasks/create-release/run.sh"
+  path: "src/ci/tasks/create-dev-release-tarball/run.sh"

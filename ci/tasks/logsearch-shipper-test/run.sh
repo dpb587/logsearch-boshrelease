@@ -3,6 +3,6 @@
 set -e
 set -u
 
-cd repo/
+cd src/
 
 RELEASE_DIR=$PWD /usr/local/logsearch-shipper-release-utils/bin/test

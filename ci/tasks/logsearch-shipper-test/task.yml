@@ -4,4 +4,4 @@ image: "docker:///dpb587/logsearch-shipper-release-utils"
 inputs:
   - name: "repo"
 run:
-  path: "repo/ci/tasks/logsearch-shipper-test/run.sh"
+  path: "src/ci/tasks/logsearch-shipper-test/run.sh"
