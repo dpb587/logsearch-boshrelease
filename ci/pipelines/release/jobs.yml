@@ -1,0 +1,38 @@
+- name: "major"
+  public: true
+  plan:
+    - aggregate:
+        - get: "version"
+          params:
+            bump: "major"
+        - get: "repo"
+          resource: "repo-dev"
+    - task: "repo"
+      file: "repo/ci/tasks/fetch-release/task.yml"
+      config:
+        params:
+          RELEASE_TGZ: "https://{{artifact-bucket}}.s3.amazonaws.com/{{artifact-dev-prefix}}tarball/logsearch-{version}.tgz"
+    - task: "create-release"
+      file: "repo/ci/tasks/create-release/task.yml"
+      config:
+        params:
+          RELEASE_DIR: "repo/repo"
+          FINAL_RELEASE: "true"
+    - put: "release-release"
+      params:
+        from: "create-release/repo/repo/releases/logsearch/logsearch-(.+).tgz"
+        to: "{{artifact-release-prefix}}tarball/"
+    - put: "repo-release"
+      params:
+        repository: "create-release/repo/repo"
+        rebase: true
+        tag: "create-release/repo/name"
+    - put: "github-release"
+      params:
+        name: "create-release/repo/name"
+        tag: "create-release/repo/name"
+        body: "create-release/repo/notes.md"
+        commitish: "create-release/repo/commit"
+    - put: "version"
+      params:
+        file: "version/number"

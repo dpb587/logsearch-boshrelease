@@ -17,7 +17,7 @@
     - put: "release-dev"
       params:
         from: "repo/dev_releases/logsearch/logsearch-(.+).tgz"
-        to: "{{release-dev-prefix}}tarball/"
+        to: "{{artifact-dev-prefix}}tarball/"
 
 - name: "update-version"
   public: true

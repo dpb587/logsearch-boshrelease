@@ -7,24 +7,24 @@
 - name: "version-dev"
   type: "semver"
   source:
-    bucket: "{{release-bucket}}"
-    key: "{{release-dev-prefix}}version"
+    bucket: "{{artifact-bucket}}"
+    key: "{{artifact-dev-prefix}}version"
     access_key_id: "{{aws-access-key}}"
     secret_access_key: "{{aws-secret-key}}"
 
 - name: "version-dev-wip"
   type: "semver"
   source:
-    bucket: "{{release-bucket}}"
-    key: "{{release-dev-prefix}}version-wip"
+    bucket: "{{artifact-bucket}}"
+    key: "{{artifact-dev-prefix}}version-wip"
     access_key_id: "{{aws-access-key}}"
     secret_access_key: "{{aws-secret-key}}"
 
 - name: "release-dev"
   type: "s3"
   source:
-    bucket: "{{release-bucket}}"
-    regexp: "{{release-dev-prefix}}tarball/logsearch-(.*).tgz"
+    bucket: "{{artifact-bucket}}"
+    regexp: "{{artifact-dev-prefix}}tarball/logsearch-(.*).tgz"
     access_key_id: "{{aws-access-key}}"
     secret_access_key: "{{aws-secret-key}}"
 

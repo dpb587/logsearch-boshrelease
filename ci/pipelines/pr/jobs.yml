@@ -21,4 +21,4 @@
     - put: "release-pr"
       params:
         from: "repo/dev_releases/logsearch/logsearch-(.+).tgz"
-        to: "{{release-dev-prefix}}tarball/"
+        to: "{{artifact-dev-prefix}}tarball/"

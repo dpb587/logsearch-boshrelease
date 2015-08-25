@@ -1,2 +1,2 @@
 repo-dev-branch: "develop"
-release-dev-prefix: "develop/"
+artifact-dev-prefix: "develop/"

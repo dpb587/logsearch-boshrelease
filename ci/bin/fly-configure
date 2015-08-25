@@ -3,13 +3,24 @@
 set -e
 set -u
 
-export PR_REPO_OWNER="${PR_REPO_OWNER:-logsearch}"
-export PR_REPO_NAME="${PR_REPO_NAME:-logsearch-boshrelease}"
-
 function varsfrom {
   [ -e ci/config/$1.yml ] && echo "--vars-from ci/config/$1.yml"
   [ -e ci/config/$1-private.yml ] && echo "--vars-from ci/config/$1-private.yml"
 }
+
+function varslookup {
+  cat ci/config/common.yml $( [ -e ci/config/common-private.yml ] && echo ci/config/common-private.yml ) \
+    | grep "^$1:" \
+    | tail -n1 \
+    | awk '{ print $2 }' \
+    | sed -E 's/"(.+)"/\1/'
+}
+
+export PR_BASE_REPO_OWNER=$( varslookup github-user )
+export PR_BASE_REPO_NAME=$( varslookup github-repository )
+
+# @todo remove me
+export PR_BASE_REPO_OWNER=logsearch
 
 YML=$( mktemp pipeline-XXXXXX )
 
@@ -26,6 +37,19 @@ fly -t "${FLY_TARGET}" \
   --var repo-resource=repo-dev \
   --var release-resource=release-dev \
   "${1:-logsearch}-develop"
+
+#
+# release
+#
+
+./ci/pipelines/release/generate > $YML
+
+fly -t "${FLY_TARGET}" \
+  configure --config $YML \
+  $( varsfrom common ) \
+  $( varsfrom develop ) \
+  $( varsfrom release ) \
+  "${1:-logsearch}-release"
 
 #
 # dynamic prs

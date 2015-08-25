@@ -11,12 +11,12 @@ mkdir -p ../../config/pr
 
 PR_NUMBER="$1"
 
-PR_GITHUB=$( wget -qO- "https://api.github.com/repos/$PR_REPO_OWNER/$PR_REPO_NAME/pulls/$PR_NUMBER" )
+PR_GITHUB=$( wget -qO- "https://api.github.com/repos/$PR_BASE_REPO_OWNER/$PR_BASE_REPO_NAME/pulls/$PR_NUMBER" )
 
 PR_BASE_REF=$( echo "${PR_GITHUB}" | jq -r '.base.ref' )
 
-PR_HEAD_OWNER=$( echo "${PR_GITHUB}" | jq -r '.head.repo.owner.login' )
-PR_HEAD_NAME=$( echo "${PR_GITHUB}" | jq -r '.head.repo.name' )
+PR_HEAD_REPO_OWNER=$( echo "${PR_GITHUB}" | jq -r '.head.repo.owner.login' )
+PR_HEAD_REPO_NAME=$( echo "${PR_GITHUB}" | jq -r '.head.repo.name' )
 PR_HEAD_REF=$( echo "${PR_GITHUB}" | jq -r '.head.ref' )
 
 echo "jobs:"
@@ -29,6 +29,6 @@ cat resources.yml | sed 's/^/  /'
 
 cat > ../../config/pr/$1.yml << EOF
 repo-branch: "${PR_BASE_REF}"
-repo-pr-uri: "https://github.com/${PR_HEAD_OWNER}/${PR_HEAD_NAME}.git"
+repo-pr-uri: "https://github.com/${PR_HEAD_REPO_OWNER}/${PR_HEAD_REPO_NAME}.git"
 repo-pr-branch: "${PR_HEAD_REF}"
 EOF

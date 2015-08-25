@@ -3,7 +3,7 @@ name: develop-e2e
 
 releases:
 - name: logsearch
-  version: latest
+  version: dynamic
 
 compilation:
   workers: 2

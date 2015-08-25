@@ -1,0 +1,28 @@
+- name: "repo-release"
+  type: "git"
+  source:
+    uri: "{{repo-uri}}"
+    branch: "{{repo-release-branch}}"
+
+- name: "release-release"
+  type: "s3"
+  source:
+    bucket: "{{artifact-bucket}}"
+    regexp: "{{artifact-release-prefix}}tarball/logsearch-(.*).tgz"
+    access_key_id: "{{aws-access-key}}"
+    secret_access_key: "{{aws-secret-key}}"
+
+- name: "github-release"
+  type: "github-release"
+  source:
+    access_token: "{{github-api-token}}"
+    user: "{{github-user}}"
+    repository: "{{github-repository}}"
+
+- name: "version"
+  type: "semver"
+  source:
+    bucket: "{{artifact-bucket}}"
+    key: "{{artifact-release-prefix}}version"
+    access_key_id: "{{aws-access-key}}"
+    secret_access_key: "{{aws-secret-key}}"
