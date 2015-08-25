@@ -3,7 +3,7 @@
 set -e
 set -u
 
-VERSION=$( cat ../version/number )
+VERSION=$( cat version/number )
 
 RELEASE_DIR="${RELEASE_DIR:-repo}"
 
