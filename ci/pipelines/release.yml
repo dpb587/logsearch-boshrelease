@@ -18,11 +18,19 @@ resources:
       user: {{github-release-user}}
       repository: {{github-release-repository}}
 
+  - name: "version-candidate"
+    type: semver
+    source:
+      bucket: {{release-bucket}}
+      key: "{{candidate-prefix}}/version"
+      access_key_id: {{release-access-key}}
+      secret_access_key: {{release-secret-key}}
+
   - name: "version"
     type: semver
     source:
       bucket: {{release-bucket}}
-      key: "release/version"
+      key: "{{release-prefix}}/version"
       access_key_id: {{release-access-key}}
       secret_access_key: {{release-secret-key}}
 
@@ -33,12 +41,24 @@ jobs:
       - get: "version"
         params:
           bump: "major"
+      - get: "repo"
+      - task: "fetch-release"
+        file: "repo/ci/tasks/fetch-release/task.yml"
+        config:
+          params:
+            RELEASE_TGZ: "https://{{release-bucket}}.s3.amazonaws.com/{{candidate-prefix}}tarball/logsearch-{version}.tgz"
+      - task: "create-release"
+        file: "repo/ci/tasks/create-release/task.yml"
+        config:
+          params:
+            FINAL_RELEASE: "true"
+      - put: "github-release"
+        params:
+          repository: "fetch-release/repo"
+          name: "fetch-release/name"
+          tag: "fetch-release/name"
+          body: "fetch-release/notes.md"
+          commitish: "fetch-release/commit"
       - put: "version"
         params:
           file: "version/number"
-      - put: "github-release"
-        params:
-          name: "release-metadata/name"
-          tag: "release-metadata/name"
-          body: "release-metadata/notes.md"
-          commitish: generate-commitish/commitish
