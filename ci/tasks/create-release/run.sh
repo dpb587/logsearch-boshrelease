@@ -55,7 +55,7 @@ fi
 # dump the source code
 #
 
-mkdir $RELEASE_SRC_DIR/logsearch
+mkdir -p $RELEASE_SRC_DIR/logsearch
 
 COMMIT=$( git rev-parse HEAD )
 COMMIT_SHORT=$( echo $COMMIT | cut -c -10 )
