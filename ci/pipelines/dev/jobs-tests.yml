@@ -9,9 +9,10 @@
     - task: "src"
       config:
         platform: linux
-        image: docker:///concourse/concourse-ci
+        image: docker:///konne/ubuntu-wget
+        inputs: [ { name: "version" } ]
         run:
-          path: "sh"
+          path: "/bin/bash"
           args: [ "-c", "wget -O- https://{{artifact-bucket}}.s3.amazonaws.com/{{artifact-dev-prefix}}tarball/logsearch-$( cat version/number ).tgz | tar -xzf- --strip-components=1" ]
     - task: "release"
       file: "src/ci/jobs/create-release-tarball/task.yml"
@@ -45,9 +46,10 @@
     - task: "src"
       config:
         platform: linux
-        image: docker:///concourse/concourse-ci
+        image: docker:///konne/ubuntu-wget
+        inputs: [ { name: "version" } ]
         run:
-          path: "sh"
-          args: [ "-c", "wget -O- https://{{artifact-bucket}}.s3.amazonaws.com/{{artifact-dev-prefix}}tarball/logsearch-$( cat version/number ).tgz | tar -xzf- --strip-components=1" ]
+          path: "/bin/bash"
+          args: [ "-c", "wget -O- https://{{artifact-bucket}}.s3.amazonaws.com/{{artifact-dev-prefix}}src/logsearch-src-$( cat version/number ).tgz | tar -xzf- --strip-components=1" ]
     - task: "test"
       file: "src/ci/tasks/logsearch-shipper-test/task.yml"
