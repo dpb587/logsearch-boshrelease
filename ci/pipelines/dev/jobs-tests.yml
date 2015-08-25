@@ -6,18 +6,24 @@
       trigger: true
       passed:
         - "create-release"
-    - task: "src"
-      config:
-        platform: linux
-        image: docker:///konne/ubuntu-wget
-        inputs: [ { name: "version" } ]
-        run:
-          path: "/bin/bash"
-          args: [ "-c", "wget -O- https://{{artifact-bucket}}.s3.amazonaws.com/{{artifact-dev-prefix}}tarball/logsearch-$( cat version/number ).tgz | tar -xzf- --strip-components=1" ]
-    - task: "release"
-      file: "src/ci/jobs/create-release-tarball/task.yml"
-    - get: "bosh-warden-stemcell"
-      trigger: true
+    - aggregate:
+        - task: "release"
+          config:
+            platform: linux
+            image: docker:///konne/ubuntu-wget
+            inputs: [ { name: "version" } ]
+            run:
+              path: "/bin/bash"
+              args: [ "-c", "wget -O tarball.tgz https://{{artifact-bucket}}.s3.amazonaws.com/{{artifact-dev-prefix}}tarball/logsearch-$( cat version/number ).tgz" ]
+        - task: "src"
+          config:
+            platform: linux
+            image: docker:///konne/ubuntu-wget
+            inputs: [ { name: "version" } ]
+            run:
+              path: "/bin/bash"
+              args: [ "-c", "wget -O- https://{{artifact-bucket}}.s3.amazonaws.com/{{artifact-dev-prefix}}src/logsearch-src-$( cat version/number ).tgz | tar -xzf- --strip-components=1" ]
+        - get: "bosh-warden-stemcell"
     - put: "e2e-deployment"
       params:
         manifest: "src/ci/jobs/dev-e2e/deployment.yml"
