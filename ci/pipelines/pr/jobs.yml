@@ -13,6 +13,8 @@
           resource: "version-wip"
           params:
             bump: "patch"
+    - task: "repo"
+      file: "repo/ci/tasks/merge-pr/task.yml"
     - task: "create-release"
       file: "repo/ci/tasks/create-release/task.yml"
       config:
