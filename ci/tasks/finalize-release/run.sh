@@ -19,6 +19,8 @@ blobstore:
     secret_access_key: $AWS_SECRET_KEY
 EOF
 
+cat config/private.yml
+
 #
 # finalize the release
 #
