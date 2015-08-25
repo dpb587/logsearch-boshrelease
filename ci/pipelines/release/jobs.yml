@@ -28,8 +28,8 @@
       file: "src/ci/tasks/finalize-release/task.yml"
       config:
         params:
-          AWS_ACCESS_KEY: "{{ aws-access-key }}"
-          AWS_SECRET_KEY: "{{ aws-secret-key }}"
+          AWS_ACCESS_KEY: "{{aws-access-key}}"
+          AWS_SECRET_KEY: "{{aws-secret-key}}"
     - put: "release-release"
       params:
         from: "create-release/repo/repo/releases/logsearch/(.+).tgz"
