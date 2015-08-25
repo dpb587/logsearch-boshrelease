@@ -10,6 +10,9 @@ FINAL_RELEASE="${FINAL_RELEASE:-false}"
 MERGE_PATH="${MERGE_PATH:-}"
 VERSION=$( cat ../version/number )
 
+git config user.email "${CI_EMAIL:-ci@localhost}"
+git config user.name "${CI_NAME:-CI Bot}"
+
 if [[ "true" == "$FINAL_RELEASE" ]] ; then
   EXTRA_OPTS="$EXTRA_OPTS --final"
 fi
@@ -30,9 +33,6 @@ if [[ "true" != "$FINAL_RELEASE" ]] ; then
 fi
 
 git add -A .final_builds releases
-
-git config user.email "${CI_EMAIL:-ci@localhost}"
-git config user.name "${CI_NAME:-CI Bot}"
 
 (
   set -e
